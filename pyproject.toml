@@ -47,12 +47,6 @@ packages = ["pelican"]
 [tool.hatch.build.targets.sdist]
 include = ["pelican/", "CHANGELOG.md", "CONTRIBUTING.md", "README.md", "pyproject.toml"]
 
-[tool.autopub]
-project-name = "OEmbed"
-git-username = "botpub"
-git-email = "52496925+botpub@users.noreply.github.com"
-append-github-contributor = true
-
 [tool.pytest.ini_options]
 testpaths = ["pelican/plugins/oembed"]
 addopts = "--cov=pelican.plugins.oembed --cov-report=term-missing"
