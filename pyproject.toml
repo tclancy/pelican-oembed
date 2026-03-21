@@ -96,6 +96,10 @@ ignore = [
   "ISC001",  # disabled so `ruff format` works without warning
 ]
 
+[tool.ruff.lint.per-file-ignores]
+"**/test_*.py" = ["D101", "D102", "PLR2004", "PLC0415"]
+"tasks.py" = ["TRY003"]
+
 [tool.ruff.lint.isort]
 combine-as-imports = true
 force-sort-within-sections = true
@@ -115,12 +119,7 @@ test = [
     "pelican[markdown]>=4.11.0",
 ]
 dev = [
-    "invoke>=2.2",
+    {include-group = "lint"},
+    {include-group = "test"},
     "pre-commit>=4.0.0",
-    "ruff>=0.14.2,<1.0.0",
-    "markdown>=3.4",
-    "pytest>=7.0",
-    "pytest-cov>=4.0",
-    "pytest-sugar>=1.0",
-    "pelican[markdown]>=4.11.0",
 ]

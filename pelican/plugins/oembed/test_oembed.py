@@ -5,7 +5,6 @@ from __future__ import annotations
 from unittest.mock import MagicMock, patch
 
 import markdown
-import pytest
 
 from pelican.plugins.oembed.oembed import (
     BARE_URL_RE,

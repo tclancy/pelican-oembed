@@ -13,9 +13,10 @@ from __future__ import annotations
 import re
 import warnings
 
-import markdown
 from bs4 import MarkupResemblesLocatorWarning
+import markdown
 from micawber import Provider, ProviderRegistry
+
 from pelican import signals
 
 # Filter BeautifulSoup warnings about URLs
@@ -111,7 +112,7 @@ class OEmbedPreprocessor(markdown.preprocessors.Preprocessor):
 class OEmbedExtension(markdown.Extension):
     """Markdown extension that registers the OEmbed preprocessor."""
 
-    def extendMarkdown(self, md: markdown.Markdown) -> None:  # noqa: N802
+    def extendMarkdown(self, md: markdown.Markdown) -> None:
         """Add the OEmbed preprocessor to the Markdown pipeline."""
         md.preprocessors.register(OEmbedPreprocessor(md), "oembed", 30)
 

@@ -1,4 +1,3 @@
-from inspect import cleandoc
 import logging
 import os
 from pathlib import Path
@@ -23,10 +22,8 @@ VENV = str(VENV_PATH.expanduser())
 BIN_DIR = "bin" if os.name != "nt" else "Scripts"
 VENV_BIN = Path(VENV) / Path(BIN_DIR)
 
-TOOLS = ("cruft", "pdm", "pre-commit")
-PDM = which("pdm") if which("pdm") else (VENV_BIN / "pdm")
-CMD_PREFIX = f"{VENV_BIN}/" if ACTIVE_VENV else f"{PDM} run "
-CRUFT = which("cruft") if which("cruft") else f"{CMD_PREFIX}cruft"
+UV = which("uv") or "uv"
+CMD_PREFIX = f"{VENV_BIN}/" if ACTIVE_VENV else f"{UV} run "
 PRECOMMIT = which("pre-commit") if which("pre-commit") else f"{CMD_PREFIX}pre-commit"
 PTY = os.name != "nt"
 
@@ -46,9 +43,7 @@ def format(c, check=False, diff=False):
         check_flag = "--check"
     if diff:
         diff_flag = "--diff"
-    c.run(
-        f"{CMD_PREFIX}ruff format {check_flag} {diff_flag} {PKG_PATH} tasks.py", pty=PTY
-    )
+    c.run(f"{CMD_PREFIX}ruff format {check_flag} {diff_flag} {PKG_PATH} tasks.py", pty=PTY)
 
 
 @task
@@ -72,15 +67,6 @@ def lint(c, concise=False, fix=False, diff=False):
 
 
 @task
-def tools(c):
-    """Install development tools in the virtual environment if not already on PATH."""
-    for tool in TOOLS:
-        if not which(tool):
-            logger.info(f"** Installing {tool} **")
-            c.run(f"{CMD_PREFIX}pip install {tool}")
-
-
-@task
 def precommit(c):
     """Install pre-commit hooks to .git/hooks/pre-commit."""
     logger.info("** Installing pre-commit hooks **")
@@ -88,33 +74,13 @@ def precommit(c):
 
 
 @task
-def update(c, check=False):
-    """Apply upstream plugin template changes to this project."""
-    if check:
-        logger.info("** Checking for upstream template changes **")
-        c.run(f"{CRUFT} check", pty=PTY)
-    else:
-        logger.info("** Updating project from upstream template **")
-        c.run(f"{CRUFT} update", pty=PTY)
-
-
-@task
 def setup(c):
     """Set up the development environment."""
-    if which("pdm") or ACTIVE_VENV:
-        tools(c)
-        c.run(f"{CMD_PREFIX}python -m pip install --upgrade pip", pty=PTY)
-        c.run(f"{PDM} update --dev", pty=PTY)
+    if which("uv"):
+        c.run(f"{UV} sync --group dev", pty=PTY)
         precommit(c)
         logger.info("\nDevelopment environment should now be set up and ready!\n")
     else:
-        error_message = """
-            PDM is not installed, and there is no active virtual environment available.
-            You can either manually create and activate a virtual environment, or you can
-            install PDM via:
-
-            curl -sSL https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py | python3 -
-
-            Once you have taken one of the above two steps, run `invoke setup` again.
-            """  # noqa: E501
-        raise SystemExit(cleandoc(error_message))
+        raise SystemExit(
+            "uv is not installed. See https://docs.astral.sh/uv/getting-started/installation/"
+        )
