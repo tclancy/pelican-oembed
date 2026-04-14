@@ -1,5 +1,17 @@
 __pycache__/
 *.egg-info/
+*.pyc
 dist/
+build/
 .venv/
 pelican/plugins/oembed/_version.py
+
+# Test / coverage artifacts — untracked files dirty the tree from
+# setuptools_scm's perspective, which breaks hatch-vcs version derivation
+# during `uv build` on tagged releases.
+.coverage
+.coverage.*
+.pytest_cache/
+htmlcov/
+coverage.xml
+.tox/
