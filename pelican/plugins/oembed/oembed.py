@@ -44,6 +44,9 @@ providers.register(
     r"https://youtu\.be/\S+",
     Provider("https://www.youtube.com/oembed"),
 )
+providers.register(
+    r"https://www.youtube.com/shorts/\S+", 
+    Provider("https://www.youtube.com/oembed"))
 
 # Vimeo
 providers.register(
