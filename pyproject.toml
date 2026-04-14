@@ -1,10 +1,10 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
 name = "pelican-oembed"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Pelican plugin: embed oEmbed URLs (YouTube, Vimeo, Twitter, etc.) in Markdown content"
 authors = [{name = "Tom Clancy"}]
 license = {text = "MIT"}
@@ -40,6 +40,12 @@ markdown = ["markdown>=3.4"]
 "Homepage" = "https://github.com/tclancy/pelican-oembed"
 "Issue Tracker" = "https://github.com/tclancy/pelican-oembed/issues"
 "Changelog" = "https://github.com/tclancy/pelican-oembed/blob/main/CHANGELOG.md"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "pelican/plugins/oembed/_version.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["pelican"]
